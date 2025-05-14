@@ -18,6 +18,8 @@ This project is an **interactive data visualization dashboard** built using **HT
 ## 🖼️ Dashboard Preview
 
 ![Screenshot 2025-05-14 181049](https://github.com/user-attachments/assets/7dcc11a2-5d90-44c8-b014-a15f85a74f4c)
+![Screenshot 2025-05-14 181059](https://github.com/user-attachments/assets/d4123e60-eda7-4afe-830d-2fe343bbdaa3)
+![Screenshot 2025-05-14 181105](https://github.com/user-attachments/assets/a0297db1-22a6-4f31-9769-f79e0b4a16b3)
 
 
 ## 📂 Sample JSON Format
@@ -38,3 +40,20 @@ Ensure your uploaded JSON file follows this structure:
   },
   ...
 ]
+
+🚀 Getting Started:-
+Download the project files (HTML file).
+Open the sales_dashboard_glassmorphism.html file in any modern browser.
+Click the file upload input to select your local JSON data file.
+Visualizations will automatically be generated.
+
+🛠️ Technologies Used:-
+HTML5 for structure
+JavaScript for dynamic file handling and logic
+Plotly.js (latest CDN) for visualizations
+CSS with glassmorphism design principles
+
+📌 Use Cases:-
+Business analytics for retail sales
+Identifying seasonal trends and external influences
+Comparing economic indicators with sales performance
