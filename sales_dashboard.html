@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Performance Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { margin-top: 40px; }
+    .chart { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Interactive Sales Performance Dashboard</h1>
+  <input type="file" id="fileInput" accept=".json">
+  <p>Upload your JSON sales data file to generate the dashboard.</p>
+
+  <div id="chart1" class="chart"></div>
+  <div id="chart2" class="chart"></div>
+  <div id="chart3" class="chart"></div>
+  <div id="chart4" class="chart"></div>
+  <div id="chart5" class="chart"></div>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function(evt) {
+      const file = evt.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        let data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) data = [data]; // Support single object
+
+        const dates = data.map(d => new Date(d.Date));
+        const weeklySales = data.map(d => d.Weekly_Sales);
+        const holidayFlags = data.map(d => d.Holiday_Flag);
+        const temperature = data.map(d => d.Temperature);
+        const fuelPrice = data.map(d => d.Fuel_Price);
+        const cpi = data.map(d => d.CPI);
+        const unemployment = data.map(d => d.Unemployment);
+
+        Plotly.newPlot('chart1', [{
+          x: dates,
+          y: weeklySales,
+          type: 'scatter',
+          mode: 'lines+markers',
+          name: 'Weekly Sales'
+        }], {
+          title: 'Weekly Sales Over Time',
+          xaxis: { title: 'Date' },
+          yaxis: { title: 'Sales ($)' }
+        });
+
+        const holidaySales = data.filter(d => d.Holiday_Flag === 1).map(d => d.Weekly_Sales);
+        const nonHolidaySales = data.filter(d => d.Holiday_Flag === 0).map(d => d.Weekly_Sales);
+
+        Plotly.newPlot('chart2', [{
+          y: holidaySales,
+          type: 'box',
+          name: 'Holiday'
+        }, {
+          y: nonHolidaySales,
+          type: 'box',
+          name: 'Non-Holiday'
+        }], {
+          title: 'Sales Comparison: Holiday vs. Non-Holiday',
+          yaxis: { title: 'Weekly Sales ($)' }
+        });
+
+        Plotly.newPlot('chart3', [{
+          x: temperature,
+          y: weeklySales,
+          mode: 'markers',
+          type: 'scatter'
+        }], {
+          title: 'Sales vs. Temperature',
+          xaxis: { title: 'Temperature (°F)' },
+          yaxis: { title: 'Weekly Sales ($)' }
+        });
+
+        Plotly.newPlot('chart4', [
+          {
+            x: dates,
+            y: weeklySales,
+            name: 'Weekly Sales',
+            yaxis: 'y1',
+            type: 'scatter'
+          },
+          {
+            x: dates,
+            y: fuelPrice,
+            name: 'Fuel Price',
+            yaxis: 'y2',
+            type: 'scatter'
+          },
+          {
+            x: dates,
+            y: cpi,
+            name: 'CPI',
+            yaxis: 'y3',
+            type: 'scatter'
+          }
+        ], {
+          title: 'Weekly Sales, Fuel Price, and CPI Over Time',
+          xaxis: { title: 'Date' },
+          yaxis: { title: 'Sales ($)', side: 'left' },
+          yaxis2: {
+            title: 'Fuel Price ($)',
+            overlaying: 'y',
+            side: 'right',
+            anchor: 'free',
+            position: 0.85
+          },
+          yaxis3: {
+            title: 'CPI',
+            overlaying: 'y',
+            side: 'right',
+            anchor: 'free',
+            position: 0.95
+          }
+        });
+
+        Plotly.newPlot('chart5', [{
+          x: unemployment,
+          y: weeklySales,
+          text: dates.map(d => d.toDateString()),
+          mode: 'markers',
+          marker: {
+            size: cpi,
+            sizemode: 'area',
+            sizeref: 2.0 * Math.max(...cpi) / (100 ** 2),
+            color: holidayFlags,
+            colorscale: 'Viridis',
+            showscale: true,
+            colorbar: {
+              title: 'Holiday Flag'
+            }
+          }
+        }], {
+          title: 'Unemployment vs. Weekly Sales (Bubble Size = CPI)',
+          xaxis: { title: 'Unemployment Rate (%)' },
+          yaxis: { title: 'Weekly Sales ($)' }
+        });
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
