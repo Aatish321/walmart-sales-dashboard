@@ -38,10 +38,10 @@ Ensure your uploaded JSON file follows this structure:
     "CPI": 211.0963582,
     "Unemployment": 8.106
   },
-  ...
+  
 ]
 
-🚀 Getting Started:-
+##🚀 Getting Started:-
 Download the project files (HTML file).
 Open the sales_dashboard_glassmorphism.html file in any modern browser.
 Click the file upload input to select your local JSON data file.
